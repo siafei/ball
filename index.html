@@ -36,20 +36,17 @@
             o.y = 245 ;
             o.speed = 15 ;
             o.img = loadImg(path) ;
-            o.move = function(x){
-                if (x < 0) {
-                    x = 0
-                }
-                if (x > 400 - o.w) {
-                    x = 400 - o.w
-                }
-                o.x = x             
-            }
             o.moveleft = function(){
                 o.x -= o.speed ;
+                if (o.x<0) {
+                    o.x = 0 ;
+                }
             } ;
             o.moveright = function(){
                 o.x += o.speed ;
+                if (o.x>336) {
+                    o.x=336 ;
+                }
             } ;
             return o ;
         }
