@@ -7,6 +7,7 @@ class GuaGame {
         //
         this.scene = null
         this.actions = {}
+        this.on_action = {}
         this.keydowns = {}
         this.image_class = {}
         this.canvas = document.querySelector('#id-canvas')
@@ -22,11 +23,18 @@ class GuaGame {
     registerImg(name,imageClass) {
         this.image_class = Object.assign(this.image_class,imageClass);
         this.registerAction(name,imageClass[name].event)
+        this.registerOnAction(name,imageClass[name].on_event)
     }
     addEvent(g) {
         window.addEventListener('keydown', event => {
-            if (g.actions[event.key]!==undefined) {
+            if (g.actions[event.key]!== undefined) {
                 g.keydowns[event.key] = true
+            }else if(g.on_action[event.key] !== undefined) {
+                if (g.keydowns[event.key]) {
+                    g.keydowns[event.key] = false
+                }else{
+                    g.keydowns[event.key] = true
+                }
             }
         })
         window.addEventListener('keyup', function(event){
@@ -78,6 +86,12 @@ class GuaGame {
             this.actions[i] = {'classname':classname,'method':event[i]}
         }
     }
+    registerOnAction(classname,onevent) {
+        for (var i in onevent) {
+            this.on_action[i] = {'classname':classname,'method':onevent[i]}
+            this.keydowns[i] = false
+        }
+    }
     runloop() {
         // events
         var actions = Object.keys(this.actions)
@@ -85,6 +99,16 @@ class GuaGame {
             var key = actions[i]
             if(this.keydowns[key]) {
                 var mhd = this.actions[key]
+                // 如果按键被按下, 调用注册的 action
+                this.image_class[mhd['classname']][mhd['method']]()
+                // this.actions[key]()
+            }
+        }
+        var on_action = Object.keys(this.on_action)
+        for (let i = 0; i < on_action.length; i++) {
+            var key = on_action[i]
+            if(this.keydowns[key]) {
+                var mhd = this.on_action[key]
                 // 如果按键被按下, 调用注册的 action
                 this.image_class[mhd['classname']][mhd['method']]()
                 // this.actions[key]()

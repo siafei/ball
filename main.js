@@ -36,7 +36,9 @@ var enableDebugMode = function(game, enable) {
 var __main = function() {
     var game = GuaGame.instance(config)
     var paddle = Paddle.new(game.config.paddle)
+    var ball = Ball.new(game.config.ball)
     game.registerImg('paddle',{'paddle':paddle})
+    game.registerImg('ball',{'ball':ball})
     game.init()
     // enableDebugMode(game, true)
 }
