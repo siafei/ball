@@ -6,7 +6,7 @@ class Ball extends Base {
         }
     }
     move() {
-    	log(this.image)
+       log(this.image)
         // log('move')
         if (this.image.x < 0 || this.image.x > 400) {
             this.image.speedX = -this.image.speedX
