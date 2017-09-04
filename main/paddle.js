@@ -5,6 +5,7 @@ class Paddle extends Base {
         	d:'moveRight',
         	a:'moveLeft',
         }
+        this.image.name = 'paddle'
     }
 
     moveLeft() {
@@ -29,8 +30,8 @@ class Paddle extends Base {
         return x >= x1 && x <= x2
     }
     collide(ball) {
-        if (this.aInb(this.image.x, ball.ball.x, ball.ball.x + ball.ball.w) || this.aInb(ball.ball.x, this.image.x, this.image.x + this.image.w)) {
-            if (this.aInb(this.image.y, ball.ball.y, ball.ball.y + ball.ball.h) || this.aInb(ball.ball.y, this.image.y, this.image.y + this.image.h)) {
+        if (this.aInb(this.image.x, ball.x, ball.x + ball.w) || this.aInb(ball.x, this.image.x, this.image.x + this.image.w)) {
+            if (this.aInb(this.image.y, ball.y, ball.y + ball.h) || this.aInb(ball.y, this.image.y, this.image.y + this.image.h)) {
                 return true
             }
         }

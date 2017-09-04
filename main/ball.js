@@ -4,9 +4,9 @@ class Ball extends Base {
         this.on_event = {
         	k:'move',
         }
+        this.image.name = 'ball'
     }
     move() {
-    	log(this.image)
         // log('move')
         if (this.image.x < 0 || this.image.x > 400) {
             this.image.speedX = -this.image.speedX

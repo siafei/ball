@@ -5,7 +5,7 @@ class GuaGame {
         window.fps = config.fps
         this.images = config.images
         //
-        this.scene = null
+        this.blocks = {}
         this.actions = {}
         this.on_action = {}
         this.keydowns = {}
@@ -22,8 +22,17 @@ class GuaGame {
     }
     registerImg(name,imageClass) {
         this.image_class = Object.assign(this.image_class,imageClass);
-        this.registerAction(name,imageClass[name].event)
-        this.registerOnAction(name,imageClass[name].on_event)
+        imageClass[name].event && this.registerAction(name,imageClass[name].event)
+        imageClass[name].on_event && this.registerOnAction(name,imageClass[name].on_event)
+    }
+    registerBlock(blocks){
+        this.blocks = blocks
+        if (typeof(this.images['block']) == 'object') {
+            for( var i in this.blocks) {
+                this.blocks[i].image.w = this.images['block'].width
+                this.blocks[i].image.h = this.images['block'].height
+            }
+        } 
     }
     addEvent(g) {
         window.addEventListener('keydown', event => {
@@ -52,32 +61,55 @@ class GuaGame {
             var path = this.images[name]
             let img = new Image()
             img.src = path
-            this.config[names[i]].image = img
             let g = this
             img.onload = function() {
                 // 存入 g.images 中
                 g.images[name] = img
                 // 所有图片都成功载入之后, 调用 run
                 loads.push(1)
-                // log('load images', loads.length, names.length)
                 if (loads.length == names.length) {
-                    // log('load images', g.images)
+                    for(var i in g.image_class){
+                        var obj = g.image_class[i] 
+                        obj.image.w = g.images[obj.image.name].width
+                        obj.image.h = g.images[obj.image.name].height
+                    }
+                    for(var i in g.blocks){
+                        var obj = g.blocks[i] 
+                        obj.image.w = g.images.block.width
+                        obj.image.h = g.images.block.height
+                    }
                     g.__start()
                 }
             }
         }
     }
-    drawImage(img) {
-        this.context.drawImage(img.image, img.x, img.y)
+    drawImage(coor,image) {
+        this.context.drawImage(image, coor.x, coor.y)
     }
     // update
     update() {
-
+        // 球与挡板的碰撞
+        if (this.image_class['paddle'].collide(this.image_class['ball'].image)) {
+            this.image_class['ball'].reboundY()
+        }
+        // 球与砖块碰撞
+        for (var i in this.blocks) {
+            if (this.blocks[i].image.alive && this.blocks[i].collide(this.image_class['ball'].image)) {
+                this.image_class['ball'].reboundY()
+            }
+        }
     }
     // draw
     draw() {
         for (let i in this.image_class) {
-            this.drawImage(this.image_class[i].image)
+            var obj = this.image_class[i]
+            this.drawImage(obj.image,this.images[obj.image.name])
+        }
+        for(var i in this.blocks) {
+            var obj = this.blocks[i]
+            if (obj.image.alive) {
+                this.drawImage(obj.image,this.images.block)
+            }   
         }
     }
     //
