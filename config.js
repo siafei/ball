@@ -1,7 +1,7 @@
 var config = {
     images : {
         ball: 'img/ball.png',
-        // block: 'img/block.png',
+        block: 'img/block.png',
         paddle: 'img/paddle.png',
     },
     paddle : {
